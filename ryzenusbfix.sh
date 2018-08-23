@@ -1,4 +1,6 @@
 #!/bin/bash
+#XLNC
+#15/818
 
 if ! [ "$(id -u)" = 0 ]; then
 	sudo "$0" "$1"
@@ -94,7 +96,7 @@ printf '\e[9;1t' && clear
 echo
 echo -e "${ITL} /** ${STD}"
 echo -e "${ITL}  * - Name: ryzenusbfix ${STD}"
-echo -e "${ITL}  * - Info: Utility to fix USB ports on ryzen. ${STD}"
+echo -e "${ITL}  * - Info: Script to fix USB ports on ryzen systems. ${STD}"
 echo -e "${ITL}  * - Auth: XLNC ${STD}"
 echo -e "${ITL}  * - Date: 15/08/2018 ${STD}"
 echo -e "${ITL}  */ ${STD}"
