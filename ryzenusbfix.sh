@@ -7,6 +7,60 @@ if ! [ "$(id -u)" = 0 ]; then
 	exit 0
 fi
 
+printf '\e[9;1t' && clear
+echo
+echo -e "${ITL} /** ${STD}"
+echo -e "${ITL}  * - Name: ryzenusbfix ${STD}"
+echo -e "${ITL}  * - Info: Script to fix USB ports on ryzen systems. ${STD}"
+echo -e "${ITL}  * - Auth: XLNC ${STD}"
+echo -e "${ITL}  * - Date: 15/08/2018 ${STD}"
+echo -e "${ITL}  */ ${STD}"
+echo
+
+sleep 2
+echo
+echo "-> Mounting EFI."
+echo
+
+vol="/"
+DRIVE="$(diskutil info $vol | grep 'Part of Whole' | cut -d : -f 2 | sed 's/^ *//g' | sed 's/ *$//g')"
+diskutil mount /dev/"$DRIVE"s1 >/dev/null 2>&1
+
+if [ -e /Volumes/EFI/EFI/CLOVER/ACPI/patched/DSDT.aml ]; then
+	echo
+	echo "-> Existing DSDT.aml detected in EFI. [DELETING]"
+	echo
+	rm -rf /Volumes/EFI/EFI/CLOVER/ACPI/patched/DSDT.aml
+	echo
+	echo "-> Now reboot the system and re-run the ryzenusbfix"
+	echo
+	exit 1
+fi
+
+for folders in /Volumes/EFI/EFI/CLOVER/kexts/; do
+	if [ -e /Volumes/EFI/EFI/CLOVER/kexts/$folders/DummyUSB* ] || [ -e /Volumes/EFI/EFI/CLOVER/kexts/$folders/GenericUSB* ]; then
+		echo
+		echo "-> Detected old USB files in EFI. [DELETING]"
+		echo
+		rm -rf /Volumes/EFI/EFI/CLOVER/kexts/$folders/DummyUSB*
+		rm -rf /Volumes/EFI/EFI/CLOVER/kexts/$folders/GenericUSB*
+	fi
+done
+
+if [ -e /System/Library/Extensions/DummyUSB* ] || [ -e /System/Library/Extensions/GenericUSB* ]; then
+	echo
+	echo "-> Detected old USB files in S/L/E. [DELETING]"
+	echo
+	rm -rf /System/Library/Extensions/DummyUSB*
+	rm -rf /System/Library/Extensions/GenericUSB*
+	rm -rf /System/Library/PrelinkedKernels/pre*
+	echo
+	echo "-> Rebuilding caches."
+	echo
+	touch /System/Library/Extensions
+	kextcache -Boot -U /
+fi
+
 rm -rf "/tmp/XLNC"
 mkdir /tmp/XLNC
 
@@ -91,60 +145,6 @@ curl -s -o /tmp/XLNC/k2p https://raw.githubusercontent.com/XLNCi/ryzenusbfix/mas
 chmod +x "/tmp/XLNC/patchmatic"
 chmod +x "/tmp/XLNC/iasl"
 chmod +x "/tmp/XLNC/k2p"
-
-printf '\e[9;1t' && clear
-echo
-echo -e "${ITL} /** ${STD}"
-echo -e "${ITL}  * - Name: ryzenusbfix ${STD}"
-echo -e "${ITL}  * - Info: Script to fix USB ports on ryzen systems. ${STD}"
-echo -e "${ITL}  * - Auth: XLNC ${STD}"
-echo -e "${ITL}  * - Date: 15/08/2018 ${STD}"
-echo -e "${ITL}  */ ${STD}"
-echo
-
-sleep 2
-echo
-echo "-> Mounting EFI."
-echo
-
-vol="/"
-DRIVE="$(diskutil info $vol | grep 'Part of Whole' | cut -d : -f 2 | sed 's/^ *//g' | sed 's/ *$//g')"
-diskutil mount /dev/"$DRIVE"s1 >/dev/null 2>&1
-
-if [ -e /Volumes/EFI/EFI/CLOVER/ACPI/patched/DSDT.aml ]; then
-	echo
-	echo "-> Existing DSDT.aml detected in EFI. [DELETING]"
-	echo
-	rm -rf /Volumes/EFI/EFI/CLOVER/ACPI/patched/DSDT.aml
-	echo
-	echo "-> Now reboot the system and re-run the ryzenusbfix"
-	echo
-	exit 1
-fi
-
-for folders in /Volumes/EFI/EFI/CLOVER/kexts/; do
-	if [ -e /Volumes/EFI/EFI/CLOVER/kexts/$folders/DummyUSB* ] || [ -e /Volumes/EFI/EFI/CLOVER/kexts/$folders/GenericUSB* ]; then
-		echo
-		echo "-> Detected old USB files in EFI. [DELETING]"
-		echo
-		rm -rf /Volumes/EFI/EFI/CLOVER/kexts/$folders/DummyUSB*
-		rm -rf /Volumes/EFI/EFI/CLOVER/kexts/$folders/GenericUSB*
-	fi
-done
-
-if [ -e /System/Library/Extensions/DummyUSB* ] || [ -e /System/Library/Extensions/GenericUSB* ]; then
-	echo
-	echo "-> Detected old USB files in S/L/E. [DELETING]"
-	echo
-	rm -rf /System/Library/Extensions/DummyUSB*
-	rm -rf /System/Library/Extensions/GenericUSB*
-	rm -rf /System/Library/PrelinkedKernels/pre*
-	echo
-	echo "-> Rebuilding caches."
-	echo
-	touch /System/Library/Extensions
-	kextcache -Boot -U /
-fi
 
 PATCH="/tmp/XLNC/patchmatic"
 CONV="/tmp/XLNC/iasl"
