@@ -138,13 +138,12 @@ if [ -e /System/Library/Extensions/DummyUSB* ] || [ -e /System/Library/Extension
 	echo
 	rm -rf /System/Library/Extensions/DummyUSB*
 	rm -rf /System/Library/Extensions/GenericUSB*
-	chown -R 0:0 /System/Library/Extensions/
-	chmod -R 755 /System/Library/Extensions/
 	rm -rf /System/Library/PrelinkedKernels/pre*
 	echo
 	echo "-> Rebuilding caches."
 	echo
-	kextcache -u /
+	touch /System/Library/Extensions
+	kextcache -Boot -U /
 fi
 
 PATCH="/tmp/XLNC/patchmatic"
