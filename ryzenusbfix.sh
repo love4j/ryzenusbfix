@@ -8,6 +8,8 @@ if ! [ "$(id -u)" = 0 ]; then
 fi
 
 printf '\e[9;1t' && clear
+STD='\033[0;0;39m'
+ITL='\x1b[3m'
 echo
 echo -e "${ITL} /** ${STD}"
 echo -e "${ITL}  * - Name: ryzenusbfix ${STD}"
