@@ -138,9 +138,9 @@ Method (_DSM, 4, NotSerialized)\n
 end;
 EOF
 
-curl -s -o /tmp/XLNC/patchmatic https://raw.githubusercontent.com/XLNCi/ryzenusbfix/master/utils/patchmatic
-curl -s -o /tmp/XLNC/iasl https://raw.githubusercontent.com/XLNCi/ryzenusbfix/master/utils/iasl
-curl -s -o /tmp/XLNC/k2p https://raw.githubusercontent.com/XLNCi/ryzenusbfix/master/utils/k2p
+curl -s -o /tmp/XLNC/patchmatic https://raw.githubusercontent.com/XLNCs/ryzenusbfix/master/utils/patchmatic
+curl -s -o /tmp/XLNC/iasl https://raw.githubusercontent.com/XLNCs/ryzenusbfix/master/utils/iasl
+curl -s -o /tmp/XLNC/k2p https://raw.githubusercontent.com/XLNCs/ryzenusbfix/master/utils/k2p
 
 chmod +x "/tmp/XLNC/patchmatic"
 chmod +x "/tmp/XLNC/iasl"
