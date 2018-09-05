@@ -1,6 +1,14 @@
 #!/bin/bash
-#XLNC
-#15/818
+# ryzenusbfix
+# XLNC
+# 20/08/18
+
+#Save ass check for non-ryzen
+sysctl -n machdep.cpu.brand_string | grep Ryzen &>/dev/null
+if [ $? != 0 ];then
+echo " Ayyy ! i cannot proceed, this fix is only for Ryzen CPU's [Exiting]" && sleep 4
+exit 1
+fi
 
 if ! [ "$(id -u)" = 0 ]; then
 	sudo "$0" "$1"
