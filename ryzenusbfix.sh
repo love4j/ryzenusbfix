@@ -64,11 +64,13 @@ if [ -e /System/Library/Extensions/DummyUSB* ] || [ -e /System/Library/Extension
 	rm -rf /System/Library/Extensions/DummyUSB*
 	rm -rf /System/Library/Extensions/GenericUSB*
 	rm -rf /System/Library/PrelinkedKernels/pre*
+	rm -rf /System/Caches/com.apple.kext.caches
 	echo
 	echo "-> Rebuilding caches."
 	echo
 	touch /System/Library/Extensions
-	kextcache -Boot -U /
+	kextcache -U /
+	
 fi
 
 rm -rf "/tmp/XLNC"
